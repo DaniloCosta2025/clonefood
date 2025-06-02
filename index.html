@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodApp HTML</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" xintegrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Estilos personalizados */
+        .shadow-top {
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 6px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background-color: #ef4444; /* Cor vermelha principal */
+            border-radius: 10px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background-color: #f3f4f6; /* Cinza claro */
+        }
+        .aspect-square {
+            aspect-ratio: 1 / 1;
+        }
+        .snap-x {
+            scroll-snap-type: x mandatory;
+        }
+        .snap-start {
+            scroll-snap-align: start;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans pb-24"> <header id="app-header" class="bg-white p-3 shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center mb-2">
+                <div class="flex items-center text-sm text-gray-700">
+                    <i class="fas fa-map-marker-alt mr-1 text-red-500"></i>
+                    <span id="location-text" class="font-semibold truncate max-w-[150px] sm:max-w-xs">Jequié</span>
+                    </div>
+                <div class="flex items-center space-x-3">
+                    <button class="text-gray-600 hover:text-red-500 relative" aria-label="Notificações">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
+                    </button>
+                    <button class="text-gray-600 hover:text-red-500" aria-label="Carrinho">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="relative">
+                <input
+                  type="text"
+                  placeholder="Buscar em mercados e restaurantes"
+                  class="w-full p-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-300 focus:border-red-500 transition-shadow"
+                />
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+    </header>
+
+    <nav id="category-nav-container" class="bg-white p-3 shadow-sm">
+        <div class="container mx-auto">
+            <div id="category-grid" class="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-2 text-center">
+                </div>
+        </div>
+    </nav>
+
+    <section class="container mx-auto my-4 px-3">
+        <div id="promotional-banner" class="relative overflow-hidden rounded-lg shadow-lg h-40 md:h-64">
+            </div>
+        <div id="banner-dots" class="flex justify-center mt-2 space-x-2">
+            </div>
+    </section>
+
+    <section class="container mx-auto my-6 px-3">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-xl font-bold text-gray-800">Promoções com entrega grátis</h2>
+            <a href="#" class="text-sm text-red-500 hover:text-red-700 font-semibold">Ver mais</a>
+        </div>
+        <div id="free-delivery-offers-list" class="flex overflow-x-auto pb-4 snap-x snap-mandatory">
+            </div>
+    </section>
+
+    <section class="container mx-auto my-6 px-3">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-xl font-bold text-gray-800">Restaurantes Populares</h2>
+            <a href="#" class="text-sm text-red-500 hover:text-red-700 font-semibold">Ver mais</a>
+        </div>
+        <div id="popular-restaurants-list" class="flex overflow-x-auto pb-4 snap-x snap-mandatory">
+            </div>
+    </section>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-top p-2 z-50">
+        <div id="bottom-nav-items" class="container mx-auto flex justify-around items-center">
+            </div>
+    </nav>
+
+    <script>
+        // --- DADOS ---
+        const mockRestaurants = [
+          { id: 1, name: 'Cantina da Nonna', cuisine: 'Italiana', rating: 4.5, deliveryTime: '30-45 min', priceRange: 'R$20-R$50', isFreeDelivery: true, logoUrl: 'https://placehold.co/100x100/FFC107/000000?text=Nonna', imageUrl: 'https://placehold.co/600x300/FF9800/FFFFFF?text=Cantina+Nonna', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 2, name: 'Sushi Express', cuisine: 'Japonesa', rating: 4.8, deliveryTime: '40-55 min', priceRange: 'R$30-R$70', isFreeDelivery: false, logoUrl: 'https://placehold.co/100x100/E91E63/FFFFFF?text=SushiX', imageUrl: 'https://placehold.co/600x300/F44336/FFFFFF?text=Sushi+Express', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 3, name: 'Burger Mania', cuisine: 'Hamburgueria', rating: 4.2, deliveryTime: '25-40 min', priceRange: 'R$15-R$40', isFreeDelivery: true, logoUrl: 'https://placehold.co/100x100/4CAF50/FFFFFF?text=BurgerM', imageUrl: 'https://placehold.co/600x300/8BC34A/000000?text=Burger+Mania', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 4, name: 'Padaria Pão Quente', cuisine: 'Padaria', rating: 4.6, deliveryTime: '20-30 min', priceRange: 'R$10-R$30', isFreeDelivery: true, logoUrl: 'https://placehold.co/100x100/795548/FFFFFF?text=PãoQ', imageUrl: 'https://placehold.co/600x300/A1887F/FFFFFF?text=Padaria', externalLink: 'https://pizzaria.pediae.com.br/' },
+        ];
+
+        const categories = [
+          { name: 'Restaurantes', iconClass: 'fas fa-store', color: 'bg-red-50', iconColor: 'text-red-500' },
+          { name: 'Mercados', iconClass: 'fas fa-shopping-basket', color: 'bg-orange-50', iconColor: 'text-orange-500' },
+          { name: 'Bebidas', iconClass: 'fas fa-beer-mug-empty', color: 'bg-yellow-50', iconColor: 'text-yellow-500' },
+          { name: 'Farmácias', iconClass: 'fas fa-heart-pulse', color: 'bg-green-50', iconColor: 'text-green-500' },
+          { name: 'Express', iconClass: 'fas fa-motorcycle', color: 'bg-blue-50', iconColor: 'text-blue-500' },
+          { name: 'Pet Shop', iconClass: 'fas fa-paw', color: 'bg-indigo-50', iconColor: 'text-indigo-500' },
+          { name: 'Shopping', iconClass: 'fas fa-gift', color: 'bg-purple-50', iconColor: 'text-purple-500' },
+          { name: 'Mais', iconClass: 'fas fa-ellipsis-h', color: 'bg-gray-50', iconColor: 'text-gray-500' },
+        ];
+
+        const promoBanners = [
+          { id: 1, imageUrl: 'https://placehold.co/800x400/FF6347/FFFFFF?text=Promoção+1+Imperdível!', alt: 'Promoção 1' },
+          { id: 2, imageUrl: 'https://placehold.co/800x400/4682B4/FFFFFF?text=Peça+por+R$0,99', alt: 'Promoção 2' },
+          { id: 3, imageUrl: 'https://placehold.co/800x400/32CD32/FFFFFF?text=Novidades+da+Semana', alt: 'Promoção 3' },
+        ];
+
+        const bottomNavItems = [
+            { name: 'Início', iconClass: 'fas fa-home', active: true },
+            { name: 'Busca', iconClass: 'fas fa-search' },
+            { name: 'Lojas', iconClass: 'fas fa-store' },
+            { name: 'Pedidos', iconClass: 'fas fa-receipt' },
+            { name: 'Perfil', iconClass: 'fas fa-user' },
+        ];
+
+        // --- FUNÇÕES DE RENDERIZAÇÃO ---
+
+        function renderCategories() {
+            const grid = document.getElementById('category-grid');
+            grid.innerHTML = '';
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = `flex flex-col items-center justify-center p-2 rounded-lg hover:shadow-md transition-shadow ${category.color} aspect-square`;
+                button.innerHTML = `
+                    <div class="mb-1"><i class="${category.iconClass} ${category.iconColor} text-2xl"></i></div>
+                    <span class="text-xs font-medium text-gray-700">${category.name}</span>
+                `;
+                grid.appendChild(button);
+            });
+        }
+
+        let currentBannerIndex = 0;
+        let bannerInterval;
+
+        function renderPromotionalBanners() {
+            const bannerContainer = document.getElementById('promotional-banner');
+            const dotsContainer = document.getElementById('banner-dots');
+            bannerContainer.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            promoBanners.forEach((banner, index) => {
+                const img = document.createElement('img');
+                img.src = banner.imageUrl;
+                img.alt = banner.alt;
+                img.className = `absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${index === currentBannerIndex ? 'opacity-100' : 'opacity-0'}`;
+                img.onerror = () => { img.src = 'https://placehold.co/800x400/CCCCCC/FFFFFF?text=Erro+Banner'; };
+                bannerContainer.appendChild(img);
+
+                const dot = document.createElement('button');
+                dot.className = `w-2 h-2 rounded-full ${index === currentBannerIndex ? 'bg-red-500' : 'bg-gray-300'}`;
+                dot.setAttribute('aria-label', `Ir para o banner ${index + 1}`);
+                dot.onclick = () => {
+                    currentBannerIndex = index;
+                    renderPromotionalBanners(); 
+                    resetBannerInterval();
+                };
+                dotsContainer.appendChild(dot);
+            });
+        }
+        
+        function nextBanner() {
+            currentBannerIndex = (currentBannerIndex + 1) % promoBanners.length;
+            renderPromotionalBanners();
+        }
+
+        function resetBannerInterval() {
+            clearInterval(bannerInterval);
+            bannerInterval = setInterval(nextBanner, 5000);
+        }
+
+
+        function renderOfferCard(item) {
+            const div = document.createElement('div');
+            div.className = "bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 flex-shrink-0 w-64 sm:w-72 mr-4 snap-start";
+            div.onclick = () => {
+                if (item.externalLink) {
+                    window.open(item.externalLink, '_blank', 'noopener,noreferrer');
+                } else {
+                    console.warn("Nenhum URL externo fornecido para este item.");
+                }
+            };
+            div.innerHTML = `
+                <img src="${item.imageUrl}" alt="Imagem de ${item.name}" class="w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x200/CCCCCC/FFFFFF?text=Indisponível';">
+                <div class="p-3">
+                    <h3 class="text-md font-semibold text-gray-800 truncate">${item.name}</h3>
+                    <p class="text-xs text-gray-500 mb-1">${item.cuisine}</p>
+                    <div class="flex items-center text-xs text-gray-600 mb-1">
+                        <i class="fas fa-star text-yellow-500 mr-1"></i>
+                        <span>${item.rating}</span>
+                        <span class="mx-1">&bull;</span>
+                        <span>${item.priceRange}</span>
+                    </div>
+                    <div class="flex items-center text-xs text-gray-600">
+                        <i class="fas fa-clock text-gray-500 mr-1"></i>
+                        <span>${item.deliveryTime}</span>
+                        ${item.isFreeDelivery ? '<span class="ml-auto text-green-600 font-semibold">Grátis</span>' : ''}
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        function renderOfferSection(containerId, items) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; 
+            if (items.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">Nenhuma oferta disponível no momento.</p>';
+                return;
+            }
+            items.forEach(item => {
+                container.appendChild(renderOfferCard(item));
+            });
+        }
+
+        function renderBottomNav() {
+            const navContainer = document.getElementById('bottom-nav-items');
+            navContainer.innerHTML = '';
+            bottomNavItems.forEach(item => {
+                const button = document.createElement('button');
+                button.className = `flex flex-col items-center justify-center w-1/5 p-1 rounded-md ${item.active ? 'text-red-500' : 'text-gray-500 hover:text-red-400'} transition-colors`;
+                button.innerHTML = `
+                    <i class="${item.iconClass} text-xl"></i>
+                    <span class="text-xs mt-0.5">${item.name}</span>
+                `;
+                navContainer.appendChild(button);
+            });
+        }
+
+        // --- LÓGICA DE GEOLOCALIZAÇÃO E MODAL REMOVIDA ---
+
+        // --- INICIALIZAÇÃO ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderPromotionalBanners();
+            resetBannerInterval(); 
+
+            const freeDeliveryPromos = mockRestaurants.filter(r => r.isFreeDelivery);
+            renderOfferSection('free-delivery-offers-list', freeDeliveryPromos);
+            renderOfferSection('popular-restaurants-list', mockRestaurants); 
+            
+            renderBottomNav();
+        });
+
+    </script>
+</body>
+</html>

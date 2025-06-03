@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodApp HTML</title>
+    <title>FoodApp Jequié PWA</title>
+    <meta name="theme-color" content="#EF4444"/> <!-- Cor principal do app para a barra de status do Android -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png"> <!-- Ícone para iOS -->
+
+    <!-- Link para o Manifesto -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN (para ícones) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" xintegrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* Estilos personalizados */
-        .shadow-top {
+        .shadow-top { 
             box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
         }
         .overflow-x-auto::-webkit-scrollbar {
@@ -30,91 +38,239 @@
         .snap-start {
             scroll-snap-align: start;
         }
+        .hidden {
+            display: none;
+        }
+        #installPwaButton {
+            display: none; /* Inicialmente oculto */
+            margin-left: 8px; /* Espaçamento do texto da localização */
+            background-color: #10B981; /* Verde esmeralda do Tailwind */
+            color: white;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.70rem; /* Um pouco menor */
+            font-weight: 500;
+            line-height: 1; /* Ajuste para melhor alinhamento vertical */
+            cursor: pointer;
+            border: none;
+        }
+        #installPwaButton:hover {
+            background-color: #059669;
+        }
     </style>
 </head>
-<body class="bg-gray-50 font-sans pb-24"> <header id="app-header" class="bg-white p-3 shadow-sm sticky top-0 z-50">
+<body class="bg-gray-50 font-sans text-gray-900">
+
+    <!-- AppHeader -->
+    <header id="app-header" class="bg-white p-3 shadow-sm sticky top-0 z-50">
         <div class="container mx-auto">
             <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center text-sm text-gray-700">
                     <i class="fas fa-map-marker-alt mr-1 text-red-500"></i>
-                    <span id="location-text" class="font-semibold truncate max-w-[150px] sm:max-w-xs">Jequié</span>
-                    </div>
-                <div class="flex items-center space-x-3">
-                    <button class="text-gray-600 hover:text-red-500 relative" aria-label="Notificações">
-                        <i class="fas fa-bell text-xl"></i>
+                    <span id="location-text" class="font-semibold truncate max-w-[70px] xs:max-w-[80px] sm:max-w-xs">Jequié</span>
+                    <button id="installPwaButton">Instalar App</button> <!-- Botão de Instalação PWA -->
+                </div>
+                <div class="flex items-center space-x-2 sm:space-x-3"> 
+                    <button id="register-establishment-button" class="text-xs sm:text-sm bg-green-500 hover:bg-green-600 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-md transition-colors">
+                        Cadastrar Loja
+                    </button>
+                    <button id="notifications-icon" class="text-gray-600 hover:text-red-500 relative" aria-label="Notificações">
+                        <i class="fas fa-bell text-lg sm:text-xl"></i>
                         <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
                     </button>
-                    <button class="text-gray-600 hover:text-red-500" aria-label="Carrinho">
-                        <i class="fas fa-shopping-cart text-xl"></i>
-                    </button>
+                    <img id="company-logo" 
+                         src="https://i.ibb.co/Kz1N9xH/m-683e1224a9748191bfabf2921f9ed075.jpg" 
+                         alt="Logomarca da Empresa" 
+                         class="h-7 sm:h-8"> 
                 </div>
             </div>
             <div class="relative">
                 <input
+                  id="search-input"
                   type="text"
-                  placeholder="Buscar em mercados e restaurantes"
-                  class="w-full p-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-300 focus:border-red-500 transition-shadow"
+                  placeholder="Busque pelo nome do estabelecimento"
+                  class="w-full p-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-300 focus:border-red-500 transition-shadow bg-white text-gray-900 placeholder-gray-500"
                 />
                 <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
         </div>
     </header>
 
+    <!-- CategoryNav -->
     <nav id="category-nav-container" class="bg-white p-3 shadow-sm">
         <div class="container mx-auto">
             <div id="category-grid" class="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-2 text-center">
+                <!-- Categorias principais serão inseridas aqui pelo JavaScript -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <div id="main-content">
+        <!-- PromotionalBanner -->
+        <section class="container mx-auto my-4 px-3">
+            <div id="promotional-banner" class="relative overflow-hidden rounded-lg shadow-lg h-40 md:h-64">
+                <!-- Banners serão inseridos aqui -->
+            </div>
+            <div id="banner-dots" class="flex justify-center mt-2 space-x-2">
+                <!-- Bolinhas de navegação do banner -->
+            </div>
+        </section>
+
+        <!-- OfferSection: Promoções com entrega grátis -->
+        <section class="container mx-auto my-6 px-3">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xl font-bold text-gray-800">Promoções com entrega grátis</h2>
+                <a href="#" class="text-sm text-red-500 hover:text-red-700 font-semibold">Ver mais</a>
+            </div>
+            <div id="free-delivery-offers-list" class="flex overflow-x-auto pb-4 snap-x snap-mandatory">
+                <!-- Ofertas com entrega grátis serão inseridas aqui -->
+            </div>
+        </section>
+
+        <!-- OfferSection: Restaurantes Populares -->
+        <section class="container mx-auto my-6 px-3">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xl font-bold text-gray-800">Restaurantes Populares</h2>
+                <a href="#" class="text-sm text-red-500 hover:text-red-700 font-semibold">Ver mais</a>
+            </div>
+            <div id="popular-restaurants-list" class="flex overflow-x-auto pb-4 snap-x snap-mandatory">
+                <!-- Restaurantes populares serão inseridos aqui -->
+            </div>
+        </section>
+    </div>
+
+    <!-- All Categories Page -->
+    <section id="all-categories-page" class="container mx-auto my-4 px-3 hidden">
+        <div class="flex items-center mb-4 sticky top-[calc(var(--header-height,60px)+1rem)] bg-gray-50 py-2 z-40">
+            <button id="back-to-main-from-categories" class="text-red-500 hover:text-red-700 mr-4 p-2">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-800">Todas as Categorias</h2>
+        </div>
+        <div id="all-categories-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-center">
+            <!-- Todas as categorias serão inseridas aqui pelo JavaScript -->
+        </div>
+    </section>
+
+    <!-- Notifications Page -->
+    <section id="notifications-page" class="container mx-auto my-4 px-3 hidden">
+        <div class="flex items-center mb-4 sticky top-[calc(var(--header-height,60px)+1rem)] bg-gray-50 py-2 z-40">
+            <button id="back-to-main-from-notifications" class="text-red-500 hover:text-red-700 mr-4 p-2">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-800">Notificações</h2>
+        </div>
+        <div id="notification-content-area" class="p-4 bg-white rounded-lg shadow-md">
+            <img src="https://placehold.co/600x300/FFC107/000000?text=Super+Promoção!" alt="Imagem da Promoção" class="w-full h-auto rounded-md mb-4" onerror="this.onerror=null;this.src='https://placehold.co/600x300/CCCCCC/FFFFFF?text=Imagem+Promo';">
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Oferta Especial para Você!</h3>
+            <p class="text-gray-600">Não perca nossa promoção exclusiva: 50% de desconto em pizzas selecionadas. Válido somente hoje!</p>
+            <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors">
+                Aproveitar Agora!
+            </button>
+        </div>
+    </section>
+
+    <!-- Category Details Page -->
+    <section id="category-details-page" class="container mx-auto my-4 px-3 hidden">
+        <div class="flex items-center mb-4 sticky top-[calc(var(--header-height,60px)+1rem)] bg-gray-50 py-2 z-40">
+            <button id="back-to-main-from-category-details" class="text-red-500 hover:text-red-700 mr-4 p-2">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </button>
+            <h2 id="category-details-title" class="text-2xl font-bold text-gray-800">Categoria</h2>
+        </div>
+        <div id="category-details-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Restaurantes da categoria específica serão inseridos aqui -->
+        </div>
+    </section>
+
+    <!-- Search Results Page -->
+    <section id="search-results-page" class="container mx-auto my-4 px-3 hidden">
+        <div class="flex items-center mb-4 sticky top-[calc(var(--header-height,60px)+1rem)] bg-gray-50 py-2 z-40">
+            <button id="back-to-main-from-search" class="text-red-500 hover:text-red-700 mr-4 p-2">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </button>
+            <h2 id="search-results-title" class="text-2xl font-bold text-gray-800">Resultados da Busca</h2>
+        </div>
+        <div id="search-results-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Resultados da busca serão inseridos aqui -->
+        </div>
+    </section>
+
+    <!-- Registration Page -->
+    <section id="registration-page" class="container mx-auto my-4 px-3 hidden">
+        <div class="flex items-center mb-4 sticky top-[calc(var(--header-height,60px)+1rem)] bg-gray-50 py-2 z-40">
+            <button id="back-to-main-from-registration" class="text-red-500 hover:text-red-700 mr-4 p-2">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-800">Cadastro de Estabelecimento</h2>
+        </div>
+        <div class="p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto">
+            <form id="registration-form">
+                <div class="mb-4">
+                    <label for="establishment-name" class="block text-sm font-medium text-gray-700 mb-1">Nome do Estabelecimento:</label>
+                    <input type="text" id="establishment-name" name="establishment-name" required
+                           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-300 focus:border-red-500">
                 </div>
+                <div class="mb-4">
+                    <label for="establishment-address" class="block text-sm font-medium text-gray-700 mb-1">Endereço Completo:</label>
+                    <input type="text" id="establishment-address" name="establishment-address" required
+                           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-300 focus:border-red-500">
+                </div>
+                <div class="mb-6">
+                    <label for="establishment-phone" class="block text-sm font-medium text-gray-700 mb-1">Telefone/WhatsApp (com DDD):</label>
+                    <input type="tel" id="establishment-phone" name="establishment-phone" required
+                           placeholder="(XX) XXXXX-XXXX"
+                           class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-300 focus:border-red-500">
+                </div>
+                <button type="submit"
+                        class="w-full bg-red-500 text-white p-3 rounded-md hover:bg-red-600 transition-colors font-semibold">
+                    Enviar Cadastro
+                </button>
+            </form>
         </div>
-    </nav>
-
-    <section class="container mx-auto my-4 px-3">
-        <div id="promotional-banner" class="relative overflow-hidden rounded-lg shadow-lg h-40 md:h-64">
-            </div>
-        <div id="banner-dots" class="flex justify-center mt-2 space-x-2">
-            </div>
     </section>
 
-    <section class="container mx-auto my-6 px-3">
-        <div class="flex justify-between items-center mb-3">
-            <h2 class="text-xl font-bold text-gray-800">Promoções com entrega grátis</h2>
-            <a href="#" class="text-sm text-red-500 hover:text-red-700 font-semibold">Ver mais</a>
-        </div>
-        <div id="free-delivery-offers-list" class="flex overflow-x-auto pb-4 snap-x snap-mandatory">
-            </div>
-    </section>
-
-    <section class="container mx-auto my-6 px-3">
-        <div class="flex justify-between items-center mb-3">
-            <h2 class="text-xl font-bold text-gray-800">Restaurantes Populares</h2>
-            <a href="#" class="text-sm text-red-500 hover:text-red-700 font-semibold">Ver mais</a>
-        </div>
-        <div id="popular-restaurants-list" class="flex overflow-x-auto pb-4 snap-x snap-mandatory">
-            </div>
-    </section>
-
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-top p-2 z-50">
-        <div id="bottom-nav-items" class="container mx-auto flex justify-around items-center">
-            </div>
-    </nav>
 
     <script>
         // --- DADOS ---
         const mockRestaurants = [
-          { id: 1, name: 'Cantina da Nonna', cuisine: 'Italiana', rating: 4.5, deliveryTime: '30-45 min', priceRange: 'R$20-R$50', isFreeDelivery: true, logoUrl: 'https://placehold.co/100x100/FFC107/000000?text=Nonna', imageUrl: 'https://placehold.co/600x300/FF9800/FFFFFF?text=Cantina+Nonna', externalLink: 'https://pizzaria.pediae.com.br/' },
-          { id: 2, name: 'Sushi Express', cuisine: 'Japonesa', rating: 4.8, deliveryTime: '40-55 min', priceRange: 'R$30-R$70', isFreeDelivery: false, logoUrl: 'https://placehold.co/100x100/E91E63/FFFFFF?text=SushiX', imageUrl: 'https://placehold.co/600x300/F44336/FFFFFF?text=Sushi+Express', externalLink: 'https://pizzaria.pediae.com.br/' },
-          { id: 3, name: 'Burger Mania', cuisine: 'Hamburgueria', rating: 4.2, deliveryTime: '25-40 min', priceRange: 'R$15-R$40', isFreeDelivery: true, logoUrl: 'https://placehold.co/100x100/4CAF50/FFFFFF?text=BurgerM', imageUrl: 'https://placehold.co/600x300/8BC34A/000000?text=Burger+Mania', externalLink: 'https://pizzaria.pediae.com.br/' },
-          { id: 4, name: 'Padaria Pão Quente', cuisine: 'Padaria', rating: 4.6, deliveryTime: '20-30 min', priceRange: 'R$10-R$30', isFreeDelivery: true, logoUrl: 'https://placehold.co/100x100/795548/FFFFFF?text=PãoQ', imageUrl: 'https://placehold.co/600x300/A1887F/FFFFFF?text=Padaria', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 1, name: 'Cantina da Nonna', cuisine: 'Italiana', categoryName: 'Restaurantes', rating: 4.5, deliveryTime: '30-45 min', priceRange: 'R$20-R$50', isFreeDelivery: true, isPopular: true, logoUrl: 'https://placehold.co/100x100/FFC107/000000?text=Nonna', imageUrl: 'https://placehold.co/600x300/FF9800/FFFFFF?text=Cantina+Nonna', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 2, name: 'Sushi Express', cuisine: 'Japonesa', categoryName: 'Japonesa', rating: 4.8, deliveryTime: '40-55 min', priceRange: 'R$30-R$70', isFreeDelivery: false, isPopular: true, logoUrl: 'https://placehold.co/100x100/E91E63/FFFFFF?text=SushiX', imageUrl: 'https://placehold.co/600x300/F44336/FFFFFF?text=Sushi+Express', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 3, name: 'Burger Top', cuisine: 'Hamburgueria', categoryName: 'Hambúrguer', rating: 4.2, deliveryTime: '25-40 min', priceRange: 'R$15-R$40', isFreeDelivery: true, isPopular: false, logoUrl: 'https://placehold.co/100x100/4CAF50/FFFFFF?text=BurgerT', imageUrl: 'https://placehold.co/600x300/8BC34A/000000?text=Burger+Top', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 4, name: 'Padaria Pão Quente', cuisine: 'Padaria', categoryName: 'Padarias', rating: 4.6, deliveryTime: '20-30 min', priceRange: 'R$10-R$30', isFreeDelivery: true, isPopular: false, logoUrl: 'https://placehold.co/100x100/795548/FFFFFF?text=PãoQ', imageUrl: 'https://placehold.co/600x300/A1887F/FFFFFF?text=Padaria', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 5, name: 'Açaí Power', cuisine: 'Açaí', categoryName: 'Açaí', rating: 4.9, deliveryTime: '15-25 min', priceRange: 'R$15-R$35', isFreeDelivery: false, isPopular: true, logoUrl: 'https://placehold.co/100x100/673AB7/FFFFFF?text=AçaíP', imageUrl: 'https://placehold.co/600x300/9575CD/FFFFFF?text=Açaí+Power', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 6, name: 'Esfiha Mágica', cuisine: 'Árabe', categoryName: 'Árabe', rating: 4.3, deliveryTime: '35-50 min', priceRange: 'R$20-R$45', isFreeDelivery: true, isPopular: true, logoUrl: 'https://placehold.co/100x100/FFEB3B/000000?text=EsfihaM', imageUrl: 'https://placehold.co/600x300/FFF176/000000?text=Esfiha+Mágica', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 7, name: 'Frango Crocante Mania', cuisine: 'Fast Food', categoryName: 'Lanches', rating: 4.0, deliveryTime: '20-35 min', priceRange: 'R$25-R$55', isFreeDelivery: false, isPopular: false, logoUrl: 'https://placehold.co/100x100/FF9800/FFFFFF?text=FrangoC', imageUrl: 'https://placehold.co/600x300/FFB74D/000000?text=Frango+Crocante', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 8, name: 'Marmita da Vovó', cuisine: 'Brasileira', categoryName: 'Almoço', rating: 4.7, deliveryTime: '40-60 min', priceRange: 'R$18-R$30', isFreeDelivery: true, isPopular: true, logoUrl: 'https://placehold.co/100x100/009688/FFFFFF?text=VovóM', imageUrl: 'https://placehold.co/600x300/26A69A/FFFFFF?text=Marmita+da+Vovó', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 9, name: 'Pizzaria Forno a Lenha', cuisine: 'Pizzaria', categoryName: 'Pizza', rating: 4.8, deliveryTime: '30-50 min', priceRange: 'R$35-R$80', isFreeDelivery: false, isPopular: true, logoUrl: 'https://placehold.co/100x100/F44336/FFFFFF?text=PizzaF', imageUrl: 'https://placehold.co/600x300/E57373/000000?text=Pizzaria+Forno', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 10, name: 'Pastelaria Delícia', cuisine: 'Pastelaria', categoryName: 'Pastel', rating: 4.4, deliveryTime: '20-30 min', priceRange: 'R$10-R$25', isFreeDelivery: true, isPopular: false, logoUrl: 'https://placehold.co/100x100/FFC107/000000?text=PastelD', imageUrl: 'https://placehold.co/600x300/FFD54F/000000?text=Pastelaria+Delícia', externalLink: 'https://pizzaria.pediae.com.br/' },
+          { id: 11, name: 'Bolo da Vovó Caseiro', cuisine: 'Bolos', categoryName: 'Bolo', rating: 4.9, deliveryTime: '40-60 min', priceRange: 'R$25-R$60', isFreeDelivery: false, isPopular: true, logoUrl: 'https://placehold.co/100x100/E91E63/FFFFFF?text=BoloV', imageUrl: 'https://placehold.co/600x300/F06292/000000?text=Bolo+da+Vovó', externalLink: 'https://pizzaria.pediae.com.br/' },
         ];
 
-        const categories = [
-          { name: 'Restaurantes', iconClass: 'fas fa-store', color: 'bg-red-50', iconColor: 'text-red-500' },
-          { name: 'Mercados', iconClass: 'fas fa-shopping-basket', color: 'bg-orange-50', iconColor: 'text-orange-500' },
-          { name: 'Bebidas', iconClass: 'fas fa-beer-mug-empty', color: 'bg-yellow-50', iconColor: 'text-yellow-500' },
-          { name: 'Farmácias', iconClass: 'fas fa-heart-pulse', color: 'bg-green-50', iconColor: 'text-green-500' },
-          { name: 'Express', iconClass: 'fas fa-motorcycle', color: 'bg-blue-50', iconColor: 'text-blue-500' },
-          { name: 'Pet Shop', iconClass: 'fas fa-paw', color: 'bg-indigo-50', iconColor: 'text-indigo-500' },
-          { name: 'Shopping', iconClass: 'fas fa-gift', color: 'bg-purple-50', iconColor: 'text-purple-500' },
-          { name: 'Mais', iconClass: 'fas fa-ellipsis-h', color: 'bg-gray-50', iconColor: 'text-gray-500' },
+        const mainCategories = [ 
+          { name: 'Restaurantes', iconClass: 'fas fa-store', color: 'bg-red-50', iconColor: 'text-red-500', categoryFilter: 'Restaurantes' },
+          { name: 'Mercados', iconClass: 'fas fa-shopping-basket', color: 'bg-orange-50', iconColor: 'text-orange-500', categoryFilter: 'Mercados' },
+          { name: 'Bebidas', iconClass: 'fas fa-beer-mug-empty', color: 'bg-yellow-50', iconColor: 'text-yellow-500', categoryFilter: 'Bebidas' },
+          { name: 'Pizza', iconClass: 'fas fa-pizza-slice', color: 'bg-purple-50', iconColor: 'text-purple-500', categoryFilter: 'Pizza' },
+          { name: 'Hambúrguer', iconClass: 'fas fa-hamburger', color: 'bg-blue-50', iconColor: 'text-blue-500', categoryFilter: 'Hambúrguer' },
+          { name: 'Japonesa', iconClass: 'fas fa-concierge-bell', color: 'bg-green-50', iconColor: 'text-green-500', categoryFilter: 'Japonesa' },
+          { name: 'Almoço', iconClass: 'fas fa-drumstick-bite', color: 'bg-teal-50', iconColor: 'text-teal-500', categoryFilter: 'Almoço' },
+          { name: 'Mais', iconClass: 'fas fa-ellipsis-h', color: 'bg-gray-100', iconColor: 'text-gray-500', action: 'showAllCategoriesPage' },
+        ];
+
+        const allCategoriesData = [ 
+            { name: 'Pizza', iconClass: 'fas fa-pizza-slice', color: 'bg-red-50', iconColor: 'text-red-500' },
+            { name: 'Hambúrguer', iconClass: 'fas fa-hamburger', color: 'bg-orange-50', iconColor: 'text-orange-500' },
+            { name: 'Bebidas', iconClass: 'fas fa-wine-bottle', color: 'bg-blue-50', iconColor: 'text-blue-500' },
+            { name: 'Japonesa', iconClass: 'fas fa-concierge-bell', color: 'bg-green-50', iconColor: 'text-green-500' },
+            { name: 'Pastel', iconClass: 'fas fa-stroopwafel', color: 'bg-yellow-50', iconColor: 'text-yellow-500' }, 
+            { name: 'Bolo', iconClass: 'fas fa-birthday-cake', color: 'bg-pink-50', iconColor: 'text-pink-500' },
+            { name: 'Almoço', iconClass: 'fas fa-drumstick-bite', color: 'bg-teal-50', iconColor: 'text-teal-500' },
+            { name: 'Açaí', iconClass: 'fas fa-ice-cream', color: 'bg-purple-50', iconColor: 'text-purple-500'}, 
+            { name: 'Padarias', iconClass: 'fas fa-bread-slice', color: 'bg-yellow-100', iconColor: 'text-yellow-600'},
+            { name: 'Lanches', iconClass: 'fas fa-hotdog', color: 'bg-red-100', iconColor: 'text-red-600'},
+            { name: 'Árabe', iconClass: 'fas fa-pepper-hot', color: 'bg-green-100', iconColor: 'text-green-600'}, 
         ];
 
         const promoBanners = [
@@ -123,28 +279,68 @@
           { id: 3, imageUrl: 'https://placehold.co/800x400/32CD32/FFFFFF?text=Novidades+da+Semana', alt: 'Promoção 3' },
         ];
 
-        const bottomNavItems = [
-            { name: 'Início', iconClass: 'fas fa-home', active: true },
-            { name: 'Busca', iconClass: 'fas fa-search' },
-            { name: 'Lojas', iconClass: 'fas fa-store' },
-            { name: 'Pedidos', iconClass: 'fas fa-receipt' },
-            { name: 'Perfil', iconClass: 'fas fa-user' },
-        ];
+        // --- ELEMENTOS DO DOM ---
+        const mainContentEl = document.getElementById('main-content');
+        const allCategoriesPageEl = document.getElementById('all-categories-page');
+        const notificationsPageEl = document.getElementById('notifications-page'); 
+        const categoryDetailsPageEl = document.getElementById('category-details-page');
+        const searchResultsPageEl = document.getElementById('search-results-page'); 
+        const registrationPageEl = document.getElementById('registration-page'); 
+        const backToMainFromCategoriesButton = document.getElementById('back-to-main-from-categories'); 
+        const backToMainFromNotificationsButton = document.getElementById('back-to-main-from-notifications'); 
+        const backToMainFromCategoryDetailsButton = document.getElementById('back-to-main-from-category-details');
+        const backToMainFromSearchButton = document.getElementById('back-to-main-from-search'); 
+        const backToMainFromRegistrationButton = document.getElementById('back-to-main-from-registration'); 
+        const appHeaderEl = document.getElementById('app-header');
+        const searchInputEl = document.getElementById('search-input');
+        const notificationsIconEl = document.getElementById('notifications-icon'); 
+        const registerEstablishmentButtonEl = document.getElementById('register-establishment-button'); 
+        const registrationFormEl = document.getElementById('registration-form'); 
+        const notificationContentAreaEl = document.getElementById('notification-content-area');
+        const categoryDetailsTitleEl = document.getElementById('category-details-title');
+        const categoryDetailsListEl = document.getElementById('category-details-list');
+        const searchResultsTitleEl = document.getElementById('search-results-title');
+        const searchResultsListEl = document.getElementById('search-results-list');
+        const installPwaButton = document.getElementById('installPwaButton');
+
 
         // --- FUNÇÕES DE RENDERIZAÇÃO ---
-
-        function renderCategories() {
+        function renderMainCategories() {
             const grid = document.getElementById('category-grid');
             grid.innerHTML = '';
-            categories.forEach(category => {
+            mainCategories.forEach(category => {
                 const button = document.createElement('button');
-                button.className = `flex flex-col items-center justify-center p-2 rounded-lg hover:shadow-md transition-shadow ${category.color} aspect-square`;
+                button.className = `flex flex-col items-center justify-center p-2 rounded-lg hover:shadow-md transition-shadow ${category.color} text-gray-900`;
                 button.innerHTML = `
                     <div class="mb-1"><i class="${category.iconClass} ${category.iconColor} text-2xl"></i></div>
-                    <span class="text-xs font-medium text-gray-700">${category.name}</span>
+                    <span class="text-xs font-medium text-gray-700">${category.name}</span> 
                 `;
+                if (category.action === 'showAllCategoriesPage') {
+                    button.addEventListener('click', showAllCategoriesPage);
+                } else if (category.categoryFilter) { 
+                    button.addEventListener('click', () => showCategoryDetailsPage(category.categoryFilter));
+                }
                 grid.appendChild(button);
             });
+        }
+
+        function renderAllCategoriesGrid() {
+            const grid = document.getElementById('all-categories-grid');
+            grid.innerHTML = ''; 
+            allCategoriesData.forEach(category => {
+                const item = document.createElement('div'); 
+                item.className = `flex flex-col items-center justify-center p-3 rounded-lg shadow-md ${category.color} aspect-square cursor-pointer hover:opacity-80 transition-opacity`;
+                item.innerHTML = `
+                    <div class="mb-2"><i class="${category.iconClass} ${category.iconColor} text-3xl"></i></div>
+                    <span class="text-sm font-medium text-gray-700">${category.name}</span>
+                `;
+                item.addEventListener('click', () => showCategoryDetailsPage(category.name)); 
+                grid.appendChild(item);
+            });
+        }
+        
+        function renderNotificationContent() {
+            // Conteúdo é estático no HTML
         }
 
         let currentBannerIndex = 0;
@@ -153,6 +349,8 @@
         function renderPromotionalBanners() {
             const bannerContainer = document.getElementById('promotional-banner');
             const dotsContainer = document.getElementById('banner-dots');
+            if (!bannerContainer || !dotsContainer) return; 
+            
             bannerContainer.innerHTML = '';
             dotsContainer.innerHTML = '';
 
@@ -187,17 +385,23 @@
         }
 
 
-        function renderOfferCard(item) {
-            const div = document.createElement('div');
-            div.className = "bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 flex-shrink-0 w-64 sm:w-72 mr-4 snap-start";
-            div.onclick = () => {
+        function renderOfferCard(item, isHorizontalScroll = false) { 
+            const cardWrapper = document.createElement('div');
+            let baseClasses = "bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300";
+            if (isHorizontalScroll) {
+                cardWrapper.className = `${baseClasses} flex-shrink-0 w-64 sm:w-72 mr-4 snap-start`;
+            } else {
+                cardWrapper.className = baseClasses;
+            }
+            
+            cardWrapper.onclick = () => {
                 if (item.externalLink) {
                     window.open(item.externalLink, '_blank', 'noopener,noreferrer');
                 } else {
                     console.warn("Nenhum URL externo fornecido para este item.");
                 }
             };
-            div.innerHTML = `
+            cardWrapper.innerHTML = `
                 <img src="${item.imageUrl}" alt="Imagem de ${item.name}" class="w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/300x200/CCCCCC/FFFFFF?text=Indisponível';">
                 <div class="p-3">
                     <h3 class="text-md font-semibold text-gray-800 truncate">${item.name}</h3>
@@ -215,49 +419,377 @@
                     </div>
                 </div>
             `;
-            return div;
+            return cardWrapper;
         }
 
-        function renderOfferSection(containerId, items) {
+        function renderOfferSection(containerId, items, isHorizontalScroll = true) {
             const container = document.getElementById(containerId);
+            if (!container) return; 
             container.innerHTML = ''; 
             if (items.length === 0) {
-                container.innerHTML = '<p class="text-gray-500">Nenhuma oferta disponível no momento.</p>';
+                let message = 'Nenhum estabelecimento encontrado.';
+                if (containerId === 'search-results-list') {
+                    message = 'O estabelecimento ainda não faz parte do nosso app.';
+                } else if (containerId === 'category-details-list') {
+                    message = 'Nenhum estabelecimento encontrado para esta categoria.';
+                }
+                container.innerHTML = `<p class="text-gray-600 col-span-full text-center p-4">${message}</p>`;
                 return;
             }
             items.forEach(item => {
-                container.appendChild(renderOfferCard(item));
+                container.appendChild(renderOfferCard(item, isHorizontalScroll));
             });
         }
 
-        function renderBottomNav() {
-            const navContainer = document.getElementById('bottom-nav-items');
-            navContainer.innerHTML = '';
-            bottomNavItems.forEach(item => {
-                const button = document.createElement('button');
-                button.className = `flex flex-col items-center justify-center w-1/5 p-1 rounded-md ${item.active ? 'text-red-500' : 'text-gray-500 hover:text-red-400'} transition-colors`;
-                button.innerHTML = `
-                    <i class="${item.iconClass} text-xl"></i>
-                    <span class="text-xs mt-0.5">${item.name}</span>
-                `;
-                navContainer.appendChild(button);
+        // --- FUNÇÕES DE CONTROLE DE VISIBILIDADE ---
+        function hideAllPages() {
+            if (mainContentEl) mainContentEl.classList.add('hidden');
+            if (allCategoriesPageEl) allCategoriesPageEl.classList.add('hidden');
+            if (notificationsPageEl) notificationsPageEl.classList.add('hidden');
+            if (categoryDetailsPageEl) categoryDetailsPageEl.classList.add('hidden');
+            if (searchResultsPageEl) searchResultsPageEl.classList.add('hidden');
+            if (registrationPageEl) registrationPageEl.classList.add('hidden'); 
+        }
+
+        function showCategoryDetailsPage(categoryName) {
+            hideAllPages();
+            if (categoryDetailsPageEl) {
+                categoryDetailsPageEl.classList.remove('hidden');
+                if(categoryDetailsTitleEl) categoryDetailsTitleEl.textContent = categoryName;
+
+                const filteredRestaurants = mockRestaurants.filter(r => r.categoryName === categoryName);
+                renderOfferSection('category-details-list', filteredRestaurants, false); 
+            }
+            window.scrollTo(0,0);
+        }
+
+        function showAllCategoriesPage() {
+            hideAllPages();
+            if (allCategoriesPageEl) {
+                allCategoriesPageEl.classList.remove('hidden');
+                renderAllCategoriesGrid(); 
+            }
+            window.scrollTo(0, 0); 
+        }
+
+        function showMainContentPage() {
+            hideAllPages();
+            if (mainContentEl) mainContentEl.classList.remove('hidden');
+            
+            if (searchInputEl) {
+                searchInputEl.value = ''; 
+            }
+            window.scrollTo(0, 0); 
+        }
+
+        function showNotificationsPage() {
+            hideAllPages();
+            if (notificationsPageEl) {
+                notificationsPageEl.classList.remove('hidden');
+                renderNotificationContent(); 
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function showSearchResultsPage(searchTerm, results) {
+            hideAllPages();
+            if (searchResultsPageEl) {
+                searchResultsPageEl.classList.remove('hidden');
+                if (searchResultsTitleEl) searchResultsTitleEl.textContent = `Resultados para: "${searchTerm}"`;
+                renderOfferSection('search-results-list', results, false); 
+            }
+            window.scrollTo(0,0);
+        }
+
+        function showRegistrationPage() {
+            hideAllPages();
+            if (registrationPageEl) {
+                registrationPageEl.classList.remove('hidden');
+            }
+            window.scrollTo(0,0);
+        }
+        
+        function updateHeaderHeightVar() {
+            if (appHeaderEl) {
+                const headerHeight = appHeaderEl.offsetHeight;
+                document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+            }
+        }
+
+        // --- LÓGICA DE BUSCA ---
+        function handleSearchInput() {
+            const searchTerm = searchInputEl.value.trim().toLowerCase();
+            if (searchTerm === '') {
+                if (!searchResultsPageEl.classList.contains('hidden')) {
+                    showMainContentPage();
+                }
+                return;
+            }
+
+            const filteredRestaurants = mockRestaurants.filter(restaurant => 
+                restaurant.name.toLowerCase().includes(searchTerm)
+            );
+            showSearchResultsPage(searchInputEl.value.trim(), filteredRestaurants);
+        }
+
+        // --- LÓGICA DO FORMULÁRIO DE CADASTRO ---
+        function handleRegistrationSubmit(event) {
+            event.preventDefault(); 
+            
+            const establishmentName = document.getElementById('establishment-name').value;
+            const establishmentAddress = document.getElementById('establishment-address').value;
+            const establishmentPhone = document.getElementById('establishment-phone').value;
+
+            if (!establishmentName || !establishmentAddress || !establishmentPhone) {
+                alert('Por favor, preencha todos os campos do formulário.');
+                return;
+            }
+
+            const whatsappNumber = "5573981470441"; 
+            let message = `Olá! Gostaria de cadastrar meu estabelecimento:\n\n`;
+            message += `Nome do Estabelecimento: ${establishmentName}\n`;
+            message += `Endereço: ${establishmentAddress}\n`;
+            message += `Telefone/WhatsApp: ${establishmentPhone}`;
+
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank'); 
+
+            registrationFormEl.reset();
+        }
+
+        // --- LÓGICA PWA ---
+        let deferredInstallPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+            if (installPwaButton) {
+                installPwaButton.style.display = 'inline-block';
+            }
+            console.log('`beforeinstallprompt` acionado');
+        });
+
+        if (installPwaButton) {
+            installPwaButton.addEventListener('click', async () => {
+                if (!deferredInstallPrompt) {
+                    console.log("O evento de instalação não foi capturado ainda ou já foi usado.");
+                    return;
+                }
+                deferredInstallPrompt.prompt();
+                const { outcome } = await deferredInstallPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredInstallPrompt = null;
+                installPwaButton.style.display = 'none';
             });
         }
 
-        // --- LÓGICA DE GEOLOCALIZAÇÃO E MODAL REMOVIDA ---
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA foi instalado');
+            if (installPwaButton) {
+                installPwaButton.style.display = 'none';
+            }
+            deferredInstallPrompt = null;
+        });
+
 
         // --- INICIALIZAÇÃO ---
         document.addEventListener('DOMContentLoaded', () => {
-            renderCategories();
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registado com sucesso:', registration);
+                })
+                .catch((error) => {
+                    console.log('Falha ao registar Service Worker:', error);
+                });
+            }
+
+
+            renderMainCategories();
             renderPromotionalBanners();
             resetBannerInterval(); 
 
-            const freeDeliveryPromos = mockRestaurants.filter(r => r.isFreeDelivery);
-            renderOfferSection('free-delivery-offers-list', freeDeliveryPromos);
-            renderOfferSection('popular-restaurants-list', mockRestaurants); 
+            const freeDeliveryRestaurants = mockRestaurants.filter(r => r.isFreeDelivery);
+            renderOfferSection('free-delivery-offers-list', freeDeliveryRestaurants, true);
             
-            renderBottomNav();
+            const distinctPopularRestaurants = mockRestaurants.filter(r => r.isPopular && !r.isFreeDelivery);
+            const popularRestaurantsToDisplay = distinctPopularRestaurants.length > 0 ? distinctPopularRestaurants : mockRestaurants.filter(r => r.isPopular);
+            renderOfferSection('popular-restaurants-list', popularRestaurantsToDisplay, true); 
+            
+            if (backToMainFromCategoriesButton) backToMainFromCategoriesButton.addEventListener('click', showMainContentPage);
+            if (backToMainFromNotificationsButton) backToMainFromNotificationsButton.addEventListener('click', showMainContentPage);
+            if (backToMainFromCategoryDetailsButton) backToMainFromCategoryDetailsButton.addEventListener('click', showMainContentPage);
+            if (backToMainFromSearchButton) backToMainFromSearchButton.addEventListener('click', showMainContentPage);
+            if (backToMainFromRegistrationButton) backToMainFromRegistrationButton.addEventListener('click', showMainContentPage);
+
+            if (notificationsIconEl) notificationsIconEl.addEventListener('click', showNotificationsPage);
+            if (registerEstablishmentButtonEl) registerEstablishmentButtonEl.addEventListener('click', showRegistrationPage);
+            if (registrationFormEl) registrationFormEl.addEventListener('submit', handleRegistrationSubmit);
+
+            if (searchInputEl) {
+                searchInputEl.addEventListener('input', handleSearchInput);
+            }
+            
+            updateHeaderHeightVar();
+            window.addEventListener('resize', updateHeaderHeightVar);
         });
+
+        /*
+        Conteúdo para o ficheiro: manifest.json
+        (Guarde este JSON num ficheiro chamado manifest.json na mesma pasta que o seu index.html)
+        {
+            "name": "FoodApp Jequié",
+            "short_name": "FoodApp",
+            "description": "Seu app de delivery em Jequié.",
+            "start_url": "index.html",
+            "display": "standalone",
+            "background_color": "#ffffff",
+            "theme_color": "#EF4444",
+            "orientation": "portrait-primary",
+            "icons": [
+                {
+                    "src": "icons/icon-72x72.png",
+                    "type": "image/png",
+                    "sizes": "72x72"
+                },
+                {
+                    "src": "icons/icon-96x96.png",
+                    "type": "image/png",
+                    "sizes": "96x96"
+                },
+                {
+                    "src": "icons/icon-128x128.png",
+                    "type": "image/png",
+                    "sizes": "128x128"
+                },
+                {
+                    "src": "icons/icon-144x144.png",
+                    "type": "image/png",
+                    "sizes": "144x144"
+                },
+                {
+                    "src": "icons/icon-152x152.png",
+                    "type": "image/png",
+                    "sizes": "152x152"
+                },
+                {
+                    "src": "icons/icon-192x192.png",
+                    "type": "image/png",
+                    "sizes": "192x192",
+                    "purpose": "any maskable"
+                },
+                {
+                    "src": "icons/icon-384x384.png",
+                    "type": "image/png",
+                    "sizes": "384x384"
+                },
+                {
+                    "src": "icons/icon-512x512.png",
+                    "type": "image/png",
+                    "sizes": "512x512"
+                }
+            ]
+        }
+        */
+
+        /*
+        Conteúdo para o ficheiro: sw.js (Service Worker)
+        (Guarde este JavaScript num ficheiro chamado sw.js na mesma pasta que o seu index.html)
+
+        const CACHE_NAME = 'foodapp-jequie-cache-v1';
+        const urlsToCache = [
+            '/', // Alias para index.html
+            'index.html',
+            // Adicione aqui outros ficheiros estáticos que quer guardar em cache (CSS, JS, imagens principais)
+            // Exemplo: 'style.css', 'images/logo.png'
+            // Por agora, como estamos a usar CDNs, o cache principal será do index.html
+            // e o navegador pode fazer cache dos recursos CDN separadamente.
+            'https://i.ibb.co/Kz1N9xH/m-683e1224a9748191bfabf2921f9ed075.jpg' // Sua logo
+        ];
+
+        // Evento de Instalação: Guarda os ficheiros principais em cache
+        self.addEventListener('install', (event) => {
+            console.log('[Service Worker] Instalando...');
+            event.waitUntil(
+                caches.open(CACHE_NAME)
+                    .then((cache) => {
+                        console.log('[Service Worker] Cache aberto, adicionando ficheiros ao cache:', urlsToCache);
+                        return cache.addAll(urlsToCache);
+                    })
+                    .then(() => {
+                        console.log('[Service Worker] Todos os ficheiros adicionados ao cache com sucesso.');
+                        return self.skipWaiting(); // Força o service worker a ativar
+                    })
+                    .catch((error) => {
+                        console.error('[Service Worker] Falha ao guardar ficheiros no cache durante a instalação:', error);
+                    })
+            );
+        });
+
+        // Evento de Ativação: Limpa caches antigos
+        self.addEventListener('activate', (event) => {
+            console.log('[Service Worker] Ativando...');
+            event.waitUntil(
+                caches.keys().then((cacheNames) => {
+                    return Promise.all(
+                        cacheNames.map((cacheName) => {
+                            if (cacheName !== CACHE_NAME) {
+                                console.log('[Service Worker] Cache antigo removido:', cacheName);
+                                return caches.delete(cacheName);
+                            }
+                        })
+                    );
+                }).then(() => {
+                    console.log('[Service Worker] Ativado e caches antigos limpos.');
+                    return self.clients.claim(); // Torna-se o service worker ativo para todas as abas abertas
+                })
+            );
+        });
+
+        // Evento Fetch: Interceta pedidos de rede
+        // Estratégia: Cache first, caindo para network, e depois cacheia a nova resposta.
+        self.addEventListener('fetch', (event) => {
+            // Não intercetar pedidos para o WhatsApp
+            if (event.request.url.startsWith('https://wa.me/')) {
+                return;
+            }
+
+            console.log('[Service Worker] A buscar:', event.request.url);
+            event.respondWith(
+                caches.match(event.request)
+                    .then((cachedResponse) => {
+                        if (cachedResponse) {
+                            console.log('[Service Worker] Recurso encontrado no cache:', event.request.url);
+                            return cachedResponse;
+                        }
+                        console.log('[Service Worker] Recurso não encontrado no cache, buscando na rede:', event.request.url);
+                        return fetch(event.request).then((networkResponse) => {
+                            // Verifica se recebemos uma resposta válida
+                            if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic' && networkResponse.type !== 'cors') {
+                                return networkResponse;
+                            }
+
+                            // Importante: Clona a resposta. Uma stream só pode ser consumida uma vez.
+                            // Precisamos de uma para o navegador e uma para o cache.
+                            const responseToCache = networkResponse.clone();
+
+                            caches.open(CACHE_NAME)
+                                .then((cache) => {
+                                    console.log('[Service Worker] A guardar no cache a nova resposta de:', event.request.url);
+                                    cache.put(event.request, responseToCache);
+                                });
+
+                            return networkResponse;
+                        }).catch(error => {
+                            console.error('[Service Worker] Erro ao buscar na rede e não estava no cache:', error, event.request.url);
+                            // Poderia retornar uma página offline padrão aqui se quisesse
+                            // return caches.match('offline.html'); 
+                        });
+                    })
+            );
+        });
+        */
 
     </script>
 </body>
